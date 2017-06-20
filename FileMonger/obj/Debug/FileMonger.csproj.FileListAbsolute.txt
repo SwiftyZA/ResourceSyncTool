@@ -1,0 +1,7 @@
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\FileMonger\obj\Debug\FileMonger.csprojResolveAssemblyReference.cache
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\FileMonger\bin\Debug\FileMonger.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\FileMonger\bin\Debug\FileMonger.pdb
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\FileMonger\bin\Debug\Common.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\FileMonger\bin\Debug\Common.pdb
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\FileMonger\obj\Debug\FileMonger.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\FileMonger\obj\Debug\FileMonger.pdb
