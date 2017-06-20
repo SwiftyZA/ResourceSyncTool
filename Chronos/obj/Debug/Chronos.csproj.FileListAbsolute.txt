@@ -1,0 +1,11 @@
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\obj\Debug\Chronos.csprojResolveAssemblyReference.cache
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\Chronos.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\Chronos.pdb
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\Common.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\GoogleAPIClient.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\Newtonsoft.Json.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\Common.pdb
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\GoogleAPIClient.pdb
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\Newtonsoft.Json.xml
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\obj\Debug\Chronos.dll
+c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\obj\Debug\Chronos.pdb
