@@ -44,3 +44,4 @@ C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSy
 C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\ResourceSyncTool\obj\Debug\ResourceSyncTool.csproj.GenerateResource.Cache
 C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\ResourceSyncTool\obj\Debug\Assima.Resource.Translation.Tool.exe
 C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\ResourceSyncTool\obj\Debug\Assima.Resource.Translation.Tool.pdb
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\ResourceSyncTool\bin\Debug\Resource.Translation.Tool.exe.config
