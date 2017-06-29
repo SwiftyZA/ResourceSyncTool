@@ -41,6 +41,7 @@ namespace GoogleAPIClient
         /// </returns>
         public async Task<string> TranslateText(string sourceLang, string targetLang, string sourceText)
         {
+            var url = GoolgeURL(sourceLang, targetLang, sourceText);
             //Hit google
             var resp = await Client.GetAsync(GoolgeURL(sourceLang, targetLang, sourceText));
             //return empty string if the call failed

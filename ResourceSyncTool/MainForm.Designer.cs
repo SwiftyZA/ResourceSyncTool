@@ -45,18 +45,24 @@
             this.lblTotal = new System.Windows.Forms.Label();
             this.lblFilteredTotal = new System.Windows.Forms.Label();
             this.grpbxControls = new System.Windows.Forms.GroupBox();
+            this.btnClearOldDir = new System.Windows.Forms.Button();
             this.LblCurrentDir = new System.Windows.Forms.Label();
             this.lblPreviousDir = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.lblLang = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.btnCompareOldMainResXFiles = new System.Windows.Forms.Button();
             this.btnChangeLang = new System.Windows.Forms.Button();
-            this.btnGoogle = new System.Windows.Forms.Button();
+            this.btnTranslateAll = new System.Windows.Forms.Button();
+            this.btnTranslateSelectedRows = new System.Windows.Forms.Button();
+            this.btnTranslateFilterResults = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeMainResXLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Legend = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -76,6 +82,8 @@
             // 
             // dgvResX
             // 
+            this.dgvResX.AllowUserToAddRows = false;
+            this.dgvResX.AllowUserToDeleteRows = false;
             this.dgvResX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -83,7 +91,7 @@
             this.dgvResX.Location = new System.Drawing.Point(11, 204);
             this.dgvResX.Margin = new System.Windows.Forms.Padding(4);
             this.dgvResX.Name = "dgvResX";
-            this.dgvResX.Size = new System.Drawing.Size(1484, 527);
+            this.dgvResX.Size = new System.Drawing.Size(1494, 527);
             this.dgvResX.TabIndex = 0;
             this.dgvResX.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResX_CellEndEdit);
             // 
@@ -232,21 +240,36 @@
             // 
             this.grpbxControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpbxControls.Controls.Add(this.btnClearOldDir);
             this.grpbxControls.Controls.Add(this.LblCurrentDir);
             this.grpbxControls.Controls.Add(this.lblPreviousDir);
+            this.grpbxControls.Controls.Add(this.label8);
             this.grpbxControls.Controls.Add(this.lblLang);
             this.grpbxControls.Controls.Add(this.button1);
             this.grpbxControls.Controls.Add(this.btnCompareOldMainResXFiles);
             this.grpbxControls.Controls.Add(this.btnChangeLang);
-            this.grpbxControls.Controls.Add(this.btnGoogle);
+            this.grpbxControls.Controls.Add(this.btnTranslateAll);
+            this.grpbxControls.Controls.Add(this.btnTranslateSelectedRows);
+            this.grpbxControls.Controls.Add(this.btnTranslateFilterResults);
             this.grpbxControls.Location = new System.Drawing.Point(429, 32);
             this.grpbxControls.Margin = new System.Windows.Forms.Padding(4);
             this.grpbxControls.Name = "grpbxControls";
             this.grpbxControls.Padding = new System.Windows.Forms.Padding(4);
-            this.grpbxControls.Size = new System.Drawing.Size(799, 164);
+            this.grpbxControls.Size = new System.Drawing.Size(766, 164);
             this.grpbxControls.TabIndex = 7;
             this.grpbxControls.TabStop = false;
             this.grpbxControls.Text = "Controls";
+            // 
+            // btnClearOldDir
+            // 
+            this.btnClearOldDir.BackgroundImage = global::ResourceSyncTool.Properties.Resources.Red_Cross;
+            this.btnClearOldDir.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnClearOldDir.Location = new System.Drawing.Point(730, 121);
+            this.btnClearOldDir.Name = "btnClearOldDir";
+            this.btnClearOldDir.Size = new System.Drawing.Size(30, 30);
+            this.btnClearOldDir.TabIndex = 6;
+            this.btnClearOldDir.UseVisualStyleBackColor = true;
+            this.btnClearOldDir.Click += new System.EventHandler(this.btnClearOldDir_Click);
             // 
             // LblCurrentDir
             // 
@@ -255,7 +278,7 @@
             this.LblCurrentDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LblCurrentDir.Location = new System.Drawing.Point(223, 88);
             this.LblCurrentDir.Name = "LblCurrentDir";
-            this.LblCurrentDir.Size = new System.Drawing.Size(569, 28);
+            this.LblCurrentDir.Size = new System.Drawing.Size(536, 28);
             this.LblCurrentDir.TabIndex = 5;
             this.LblCurrentDir.Text = "None Selected";
             this.LblCurrentDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -267,10 +290,19 @@
             this.lblPreviousDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblPreviousDir.Location = new System.Drawing.Point(223, 122);
             this.lblPreviousDir.Name = "lblPreviousDir";
-            this.lblPreviousDir.Size = new System.Drawing.Size(569, 28);
+            this.lblPreviousDir.Size = new System.Drawing.Size(502, 28);
             this.lblPreviousDir.TabIndex = 5;
             this.lblPreviousDir.Text = "None Selected";
             this.lblPreviousDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(8, 25);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(209, 17);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Translate Using Google";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblLang
             // 
@@ -311,16 +343,38 @@
             this.btnChangeLang.UseVisualStyleBackColor = true;
             this.btnChangeLang.Click += new System.EventHandler(this.btnChangeLang_Click);
             // 
-            // btnGoogle
+            // btnTranslateAll
             // 
-            this.btnGoogle.Location = new System.Drawing.Point(6, 19);
-            this.btnGoogle.Margin = new System.Windows.Forms.Padding(4);
-            this.btnGoogle.Name = "btnGoogle";
-            this.btnGoogle.Size = new System.Drawing.Size(210, 28);
-            this.btnGoogle.TabIndex = 0;
-            this.btnGoogle.Text = "Translate Using Google";
-            this.btnGoogle.UseVisualStyleBackColor = true;
-            this.btnGoogle.Click += new System.EventHandler(this.btnGoogle_Click);
+            this.btnTranslateAll.Location = new System.Drawing.Point(223, 19);
+            this.btnTranslateAll.Margin = new System.Windows.Forms.Padding(4);
+            this.btnTranslateAll.Name = "btnTranslateAll";
+            this.btnTranslateAll.Size = new System.Drawing.Size(117, 28);
+            this.btnTranslateAll.TabIndex = 0;
+            this.btnTranslateAll.Text = "All";
+            this.btnTranslateAll.UseVisualStyleBackColor = true;
+            this.btnTranslateAll.Click += new System.EventHandler(this.btnGoogle_Click);
+            // 
+            // btnTranslateSelectedRows
+            // 
+            this.btnTranslateSelectedRows.Location = new System.Drawing.Point(473, 19);
+            this.btnTranslateSelectedRows.Margin = new System.Windows.Forms.Padding(4);
+            this.btnTranslateSelectedRows.Name = "btnTranslateSelectedRows";
+            this.btnTranslateSelectedRows.Size = new System.Drawing.Size(117, 28);
+            this.btnTranslateSelectedRows.TabIndex = 0;
+            this.btnTranslateSelectedRows.Text = "Selected Items";
+            this.btnTranslateSelectedRows.UseVisualStyleBackColor = true;
+            this.btnTranslateSelectedRows.Click += new System.EventHandler(this.btnTranslateSelectedRows_Click);
+            // 
+            // btnTranslateFilterResults
+            // 
+            this.btnTranslateFilterResults.Location = new System.Drawing.Point(348, 19);
+            this.btnTranslateFilterResults.Margin = new System.Windows.Forms.Padding(4);
+            this.btnTranslateFilterResults.Name = "btnTranslateFilterResults";
+            this.btnTranslateFilterResults.Size = new System.Drawing.Size(117, 28);
+            this.btnTranslateFilterResults.TabIndex = 0;
+            this.btnTranslateFilterResults.Text = "Filter Results";
+            this.btnTranslateFilterResults.UseVisualStyleBackColor = true;
+            this.btnTranslateFilterResults.Click += new System.EventHandler(this.btnTranslateFilterResults_Click);
             // 
             // menuStrip1
             // 
@@ -360,6 +414,8 @@
             // Legend
             // 
             this.Legend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Legend.Controls.Add(this.label10);
+            this.Legend.Controls.Add(this.panel7);
             this.Legend.Controls.Add(this.label4);
             this.Legend.Controls.Add(this.label6);
             this.Legend.Controls.Add(this.panel3);
@@ -370,17 +426,34 @@
             this.Legend.Controls.Add(this.panel5);
             this.Legend.Controls.Add(this.label3);
             this.Legend.Controls.Add(this.panel1);
-            this.Legend.Location = new System.Drawing.Point(1235, 33);
+            this.Legend.Location = new System.Drawing.Point(1202, 33);
             this.Legend.Name = "Legend";
-            this.Legend.Size = new System.Drawing.Size(265, 163);
+            this.Legend.Size = new System.Drawing.Size(303, 163);
             this.Legend.TabIndex = 11;
             this.Legend.TabStop = false;
             this.Legend.Text = "Legend";
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(38, 59);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(155, 17);
+            this.label10.TabIndex = 5;
+            this.label10.Text = "Localized File Changed";
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.LightSalmon;
+            this.panel7.Location = new System.Drawing.Point(6, 56);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(26, 25);
+            this.panel7.TabIndex = 4;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(225, 24);
+            this.label4.Location = new System.Drawing.Point(238, 24);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 17);
             this.label4.TabIndex = 1;
@@ -406,7 +479,7 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-            this.panel4.Location = new System.Drawing.Point(193, 21);
+            this.panel4.Location = new System.Drawing.Point(206, 21);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(26, 25);
             this.panel4.TabIndex = 0;
@@ -414,7 +487,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(38, 59);
+            this.label7.Location = new System.Drawing.Point(38, 93);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(146, 17);
             this.label7.TabIndex = 1;
@@ -423,7 +496,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Aqua;
-            this.panel2.Location = new System.Drawing.Point(6, 56);
+            this.panel2.Location = new System.Drawing.Point(6, 90);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(26, 25);
             this.panel2.TabIndex = 0;
@@ -431,7 +504,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(38, 93);
+            this.label5.Location = new System.Drawing.Point(38, 127);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(79, 17);
             this.label5.TabIndex = 1;
@@ -440,7 +513,7 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
-            this.panel5.Location = new System.Drawing.Point(6, 90);
+            this.panel5.Location = new System.Drawing.Point(6, 124);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(26, 25);
             this.panel5.TabIndex = 0;
@@ -448,7 +521,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(38, 127);
+            this.label3.Location = new System.Drawing.Point(238, 59);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(62, 17);
             this.label3.TabIndex = 1;
@@ -457,7 +530,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.LimeGreen;
-            this.panel1.Location = new System.Drawing.Point(6, 124);
+            this.panel1.Location = new System.Drawing.Point(206, 56);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(26, 25);
             this.panel1.TabIndex = 0;
@@ -518,7 +591,6 @@
         private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.Label lblFilteredTotal;
         private System.Windows.Forms.GroupBox grpbxControls;
-        private System.Windows.Forms.Button btnGoogle;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -540,6 +612,13 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblPreviousDir;
         private System.Windows.Forms.Label LblCurrentDir;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnTranslateAll;
+        private System.Windows.Forms.Button btnTranslateSelectedRows;
+        private System.Windows.Forms.Button btnTranslateFilterResults;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Button btnClearOldDir;
     }
 }
 

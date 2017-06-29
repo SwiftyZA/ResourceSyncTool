@@ -9,3 +9,14 @@ c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bi
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\bin\Debug\Newtonsoft.Json.xml
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\obj\Debug\Chronos.dll
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Chronos\obj\Debug\Chronos.pdb
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\Chronos.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\Chronos.pdb
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\Common.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\GoogleAPIClient.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\Newtonsoft.Json.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\Common.pdb
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\GoogleAPIClient.pdb
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\bin\Debug\Newtonsoft.Json.xml
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\obj\Debug\Chronos.csprojResolveAssemblyReference.cache
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\obj\Debug\Chronos.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Chronos\obj\Debug\Chronos.pdb

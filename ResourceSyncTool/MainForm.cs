@@ -74,7 +74,7 @@ namespace ResourceSyncTool
             //Load Resources
             var results = await FileMonger.FileMonger.AsyncLoadResXFiles(SelectedDirectory, SelectedCulture, OldDirectory);
             ResXEntries = new BindingList<ResXEntry>();
-            results.ForEach(x => ResXEntries.Add(x));
+            results.ForEach(x => ResXEntries.Add(CheckArguments(x, false)));
             //Bind Drop down lists
             BindComboBoxes();
             //Bind Data Grid View
@@ -107,10 +107,13 @@ namespace ResourceSyncTool
             dgvResX.Columns["Key"].Visible = true;
             dgvResX.Columns["Value"].ReadOnly = true;
             dgvResX.Columns["Comment"].ReadOnly = true;
-            dgvResX.Columns["SourceFile"].Visible = false;
             dgvResX.Columns["State"].Visible = false;
             dgvResX.Columns["LocalizedValue"].HeaderText = "Localized Value";
             dgvResX.Columns["LocalizedComment"].HeaderText = "Localized Comment";
+            dgvResX.Columns["SourceFile"].HeaderText = "Resource File";
+            dgvResX.Columns["SourceFile"].ReadOnly = true;
+            dgvResX.Columns["SourceFile"].DisplayIndex = 6;
+            dgvResX.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             foreach (DataGridViewRow row in dgvResX.Rows)
             {
@@ -129,6 +132,12 @@ namespace ResourceSyncTool
                         break;
                     case State.New:
                         row.DefaultCellStyle.BackColor = Color.LightGoldenrodYellow;
+                        break;
+                    case State.LocalizedChanged:
+                        row.DefaultCellStyle.BackColor = Color.LightSalmon;
+                        break;
+                    case State.Faulted:
+                        row.DefaultCellStyle.BackColor = Color.Red;
                         break;
                     case State.NoChange:
                     default:
@@ -180,7 +189,7 @@ namespace ResourceSyncTool
                     }
                     else
                     {
-                        MessageBox.Show("This selected directory contains no resource files", "No Resx files found",
+                        MessageBox.Show("The selected directory contains no resource files", "No Resx files found",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -210,7 +219,7 @@ namespace ResourceSyncTool
                     }
                     else
                     {
-                        MessageBox.Show("This selected directory contains no resource files", "No Resx files found",
+                        MessageBox.Show("The selected directory contains no resource files", "No Resx files found",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -252,26 +261,54 @@ namespace ResourceSyncTool
         private void dgvResX_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             var item = dgvResX.Rows[e.RowIndex].DataBoundItem as ResXEntry;
+            CheckNulls(item);
+            CheckArguments(item, true);
 
-            var valueMatch = ArgumentRule.MatchTexts(item.Value, item.LocalizedValue);
-            var commentMatch = ArgumentRule.ArgumentMatch.Match;
-            if (!string.IsNullOrEmpty(item.LocalizedComment))
+            switch (item.State)
             {
-                commentMatch = ArgumentRule.MatchTexts(item.Comment, item.LocalizedComment);
+                case State.Faulted:
+                    dgvResX.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+                    MessageBox.Show("The number of arguments ( {0} ) in the reference value / comment \ndoes not match the number in the localized value / comment", "Argument mismatch", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case State.Updated:
+                    dgvResX.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LimeGreen;
+                    break;
+                case State.New:
+                case State.NoChange:
+                case State.GoogleTranslated:
+                case State.MasterChanged:
+                case State.LocalizedChanged:
+                default:
+                    return;
+            }
+        }
+
+        private ResXEntry CheckArguments(ResXEntry entry, bool markUpdated)
+        {
+            var valueMatch = ArgumentRule.MatchTexts(entry.Value, entry.LocalizedValue);
+            var commentMatch = ArgumentRule.ArgumentMatch.Match;
+            if (!string.IsNullOrEmpty(entry.LocalizedComment))
+            {
+                commentMatch = ArgumentRule.MatchTexts(entry.Comment, entry.LocalizedComment);
             }
 
             if (valueMatch != ArgumentRule.ArgumentMatch.Match || commentMatch != ArgumentRule.ArgumentMatch.Match)
             {
-                item.State = State.Faulted;
-                dgvResX.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-                MessageBox.Show(
-                    "The number of arguments ( {0} ) in the refernce value / comment \ndoes not match the number in the localized value / comment", "Argument mismatch", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                entry.State = State.Faulted;
             }
-            else
+            else if (markUpdated)
             {
-                item.State = State.Updated;
-                dgvResX.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LimeGreen;
+                entry.State = State.Updated;
             }
+            return entry;
+        }
+
+        private void CheckNulls(ResXEntry entry)
+        {
+            if (entry.LocalizedValue == null)
+                entry.LocalizedValue = String.Empty;
+            if (entry.LocalizedComment == null)
+                entry.LocalizedComment = String.Empty;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -290,27 +327,6 @@ namespace ResourceSyncTool
                 SelectedCulture.Existing = true;
             }
             LoadResxFiles();
-        }
-
-        private void btnGoogle_Click(object sender, EventArgs e)
-        {
-            var newEntries = ResXEntries.Where(x => x.State == State.New).ToList();
-            if (newEntries.Count == 0)
-            {
-                MessageBox.Show("There are no values to translate", "Translate Not Available", MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            Chronos.Chronos.AddResXEntries(newEntries);
-            Chronos.Chronos.StartProcessing(new ChronosParameters()
-            {
-                Culture = SelectedCulture.Culture,
-                MaxNumberOfActiveThreads = 200,
-                RequestsPerSecond = 200
-            });
-
-            ToggleGoogleTranslateModal(newEntries.Count);
         }
 
         private void ToggleGoogleTranslateModal(int total)
@@ -343,6 +359,8 @@ namespace ResourceSyncTool
             entry.LocalizedComment = e.JobItem.LocalizedComment;
             entry.State = State.GoogleTranslated;
 
+            CheckArguments(entry, false);
+
             GoogleTranslateModal.IncrementProgress();
         }
 
@@ -364,8 +382,7 @@ namespace ResourceSyncTool
             bool cancelClose = false;
             if (ResXEntries.Any(x => x.State == State.Updated))
             {
-                var result = MessageBox.Show("You have unsaved changes, are you sure you want to quit?", "Discard Changes?",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show("You have unsaved changes, are you sure you want to quit?", "Discard Changes?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.No)
                     cancelClose = true;
@@ -407,8 +424,7 @@ namespace ResourceSyncTool
         {
             if (ResXEntries.Any(x => x.State == State.Updated || x.State == State.GoogleTranslated))
             {
-                var result = MessageBox.Show("You have unsaved changes, continuing will discard you changes.\nAre you sure you want to continue?", "Discard Changes?",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show("You have unsaved changes, continuing will discard you changes.\nAre you sure you want to continue?", "Discard Changes?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.No) return;
             }
@@ -423,6 +439,63 @@ namespace ResourceSyncTool
         private void ChangeMainResXLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StartUpPolyglot(false);
+        }
+
+        private void btnGoogle_Click(object sender, EventArgs e)
+        {
+            var itemsToTranslate = ResXEntries.Where(x => x.State == State.New).ToList();
+            GoogleTranslateResXEntries(itemsToTranslate);
+        }
+
+        private void btnTranslateFilterResults_Click(object sender, EventArgs e)
+        {
+            var itemsToTranslate = dgvResX.Rows.OfType<DataGridViewRow>().Select(x => x.DataBoundItem as ResXEntry).ToList();
+            GoogleTranslateResXEntries(itemsToTranslate);
+        }
+
+        private void btnTranslateSelectedRows_Click(object sender, EventArgs e)
+        {
+            var itemsToTranslate = dgvResX.SelectedRows.OfType<DataGridViewRow>().Select(x => x.DataBoundItem as ResXEntry).ToList();
+            GoogleTranslateResXEntries(itemsToTranslate);
+        }
+
+        private void GoogleTranslateResXEntries(List<ResXEntry> entries)
+        {
+            if (entries.Count == 0)
+            {
+                MessageBox.Show("There are no values to translate", "Translate Not Available", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            if (MessageBox.Show($"You are about to translate {entries.Count} items, do you want to continue?", "Translate Items", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                return;
+
+            Chronos.Chronos.AddResXEntries(entries);
+            Chronos.Chronos.StartProcessing(new ChronosParameters()
+            {
+                Culture = SelectedCulture.Culture,
+                MaxNumberOfActiveThreads = 200,
+                RequestsPerSecond = 200
+            });
+
+            ToggleGoogleTranslateModal(entries.Count);
+        }
+
+        private void btnClearOldDir_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(OldDirectory)) return;
+
+            if (ResXEntries.Any(x => x.State == State.Updated || x.State == State.GoogleTranslated))
+            {
+                var result = MessageBox.Show("You have unsaved changes, continuing will discard you changes.\nAre you sure you want to continue?", "Discard Changes?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.No) return;
+            }
+
+            OldDirectory = String.Empty;
+            lblPreviousDir.Text = "None Selected";
+
+            LoadResxFiles();
         }
     }
 }

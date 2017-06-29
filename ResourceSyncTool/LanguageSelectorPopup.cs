@@ -17,7 +17,7 @@ namespace ResourceSyncTool
 
             cboLanguages.DrawMode = DrawMode.OwnerDrawVariable;
             cboLanguages.DropDownStyle = ComboBoxStyle.DropDown;
-            cboLanguages.DataSource = cultures.OrderByDescending(x => x.Existing).ToList();
+            cboLanguages.DataSource = cultures.OrderByDescending(x => x.Existing).ThenBy(x => x.Name).ToList();
             cboLanguages.DisplayMember = "Name";
             cboLanguages.ValueMember = "Value";
 

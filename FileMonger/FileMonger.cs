@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Resources;
@@ -7,6 +8,7 @@ using System.Collections;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text;
 using Common;
 using Common.Enums;
 using Common.POCOS;
@@ -25,12 +27,40 @@ namespace FileMonger
             return Directory.GetDirectories(directory).Select(x => x.Replace($"{directory}\\", "")).ToList();
         }
 
-        public static async Task<List<ResXEntry>> AsyncLoadResXFiles(string directory, CultureContainer culture, string oldDir)
+        public static async Task<List<ResXEntry>> AsyncLoadResXFiles(string directory, CultureContainer culture,
+            string oldDir)
         {
-            return await Task<List<ResXEntry>>.Run(() => LoadResXFiles(directory, culture, oldDir));
+            return await Task<List<ResXEntry>>.Run(() => ProcessLoadRequest(directory, culture, oldDir));
         }
 
-        internal static List<ResXEntry> LoadResXFiles(string directory, CultureContainer culture, string oldDir)
+        private static List<ResXEntry> ProcessLoadRequest(string directory, CultureContainer culture, string oldDir)
+        {
+            var entries = LoadResXFiles(directory, culture);
+
+            if (!string.IsNullOrWhiteSpace(oldDir))
+            {
+                var oldEntries = LoadResXFiles(oldDir, culture);
+                foreach (var resXEntry in oldEntries)
+                {
+                    var entry = entries.FirstOrDefault(x => x.SourceFile == resXEntry.SourceFile
+                                                            && x.Key == resXEntry.Key);
+
+                    if (entry == null) continue;
+
+                    if (entry.Value != resXEntry.Value)
+                    {
+                        entry.State = State.MasterChanged;
+                        continue;
+                    }
+                    if (entry.LocalizedValue != resXEntry.LocalizedValue)
+                        entry.State = State.LocalizedChanged;
+                }
+            }
+
+            return entries;
+        }
+
+        private static List<ResXEntry> LoadResXFiles(string directory, CultureContainer culture)
         {
             var entries = new List<ResXEntry>();
             //Get Directory Info
@@ -43,12 +73,15 @@ namespace FileMonger
                 ResXResourceReader source = new ResXResourceReader(file.OpenRead()) { UseResXDataNodes = true };
                 entries.AddRange(ExtractResXEntries(source, file));
             }
-            if (culture.Existing)
+
+            //Get Localized Directory Info
+            DirectoryInfo localizedDirectoryInfo = new DirectoryInfo($"{directory}\\{culture.Value}");
+
+            if (culture.Existing && localizedDirectoryInfo.Exists)
             {
-                //Get Localized Directory Info
-                DirectoryInfo localizedDirectoryInfo = new DirectoryInfo($"{directory}\\{culture.Value}");
                 //Get Localized ResX Files
-                FileInfo[] localizedFiles = localizedDirectoryInfo.EnumerateFiles("*.resx", SearchOption.TopDirectoryOnly).ToArray();
+                FileInfo[] localizedFiles =
+                    localizedDirectoryInfo.EnumerateFiles("*.resx", SearchOption.TopDirectoryOnly).ToArray();
                 var localizedEntries = new List<ResXEntry>();
                 foreach (var file in localizedFiles)
                 {
@@ -77,41 +110,36 @@ namespace FileMonger
             {
                 entries.ForEach(x => x.State = State.New);
             }
-            if (!string.IsNullOrWhiteSpace(oldDir))
-            {
-                //Get Localized Directory Info
-                DirectoryInfo oldDirectoryInfo = new DirectoryInfo(oldDir);
-                //Get Localized ResX Files
-                FileInfo[] oldFiles = oldDirectoryInfo.EnumerateFiles("*.resx", SearchOption.TopDirectoryOnly).ToArray();
-                var oldEntries = new List<ResXEntry>();
-                foreach (var file in oldFiles)
-                {
-                    ResXResourceReader source = new ResXResourceReader(file.OpenRead()) { UseResXDataNodes = true };
-                    oldEntries.AddRange(ExtractResXEntries(source, file));
-                }
 
-                foreach (var resXEntry in entries)
-                {
-                    var oldEntry = oldEntries.FirstOrDefault(x =>
-                        x.SourceFile == resXEntry.SourceFile
-                        && x.Key == resXEntry.Key);
-
-                    if (oldEntry == null)
-                    {
-                        resXEntry.State = State.New;
-                    }
-                    else if (resXEntry.Comment != oldEntry.Comment || resXEntry.Value != oldEntry.Value)
-                        resXEntry.State = State.MasterChanged;
-                }
-            }
+            LoadAndApplyKeyStates(entries, localizedDirectoryInfo);
 
             return entries;
+        }
+
+        private static void LoadAndApplyKeyStates(List<ResXEntry> entries, DirectoryInfo localizedDirectoryInfo)
+        {
+            if (!File.Exists($"{localizedDirectoryInfo}\\ResXSyncToolStateInfo.csv")) return;
+
+            var keyStates = File.ReadAllLines($"{localizedDirectoryInfo}\\ResXSyncToolStateInfo.csv");
+            foreach (var keyStateLine in keyStates)
+            {
+                var keyState = keyStateLine.Split(',');
+
+                if (keyState.Length != 3) continue;
+
+                var entry = entries.FirstOrDefault(x => x.SourceFile == keyState[0] && x.Key == keyState[1]);
+
+                if (entry == null) continue;
+
+                entry.State = (State)Convert.ToInt16(keyState[2]);
+            }
         }
 
         public static void SaveResXChanges(List<ResXEntry> entries, string directory, CultureInfo selectedCulture)
         {
             //Get updated entries
-            var editedEntries = entries.Where(x => x.State == State.Updated || x.State == State.GoogleTranslated).ToList();
+            var editedEntries =
+                entries.Where(x => x.State == State.Updated || x.State == State.GoogleTranslated).ToList();
             //Get files requiring updates
             var resxFiles = editedEntries.Select(x => x.SourceFile).Distinct().ToList();
             //Get Localized Directory Info
@@ -122,7 +150,8 @@ namespace FileMonger
                 localizedDirectoryInfo.Create();
             }
             //Get Localized ResX Files
-            FileInfo[] localizedFiles = localizedDirectoryInfo.EnumerateFiles("*.resx", SearchOption.TopDirectoryOnly).ToArray();
+            FileInfo[] localizedFiles =
+                localizedDirectoryInfo.EnumerateFiles("*.resx", SearchOption.TopDirectoryOnly).ToArray();
 
             //Itterate resx files and update them accordingly
             foreach (var resxFile in resxFiles)
@@ -135,16 +164,38 @@ namespace FileMonger
                     //Create new ResX file
                     CreateNewResX(localizedDirectoryInfo.ToString(), selectedCulture, resxFile);
                     //Get fileinfo for new file 
-                    file = localizedDirectoryInfo.EnumerateFiles("*.resx", SearchOption.TopDirectoryOnly).FirstOrDefault(x => x.Name.Split('.')[0] == resxFile);
+                    file =
+                        localizedDirectoryInfo.EnumerateFiles("*.resx", SearchOption.TopDirectoryOnly)
+                            .FirstOrDefault(x => x.Name.Split('.')[0] == resxFile);
                 }
                 //Edit dat bitch
                 EditExistingResxFile(directory, selectedCulture, resxFile, editedEntries, file);
             }
+            //Save the state of edited entries
+            SaveKeyStates(editedEntries, localizedDirectoryInfo);
+        }
+
+        private static void SaveKeyStates(List<ResXEntry> entries, DirectoryInfo localizedDirectoryInfo)
+        {
+            var sb = new StringBuilder();
+
+            entries.Where(x => x.State == State.GoogleTranslated).ToList().ForEach(x =>
+            {
+                sb.Append(x.SourceFile);
+                sb.Append(",");
+                sb.Append(x.Key);
+                sb.Append(",");
+                sb.AppendLine(Convert.ToString((int)x.State));
+            });
+
+            File.WriteAllText($"{localizedDirectoryInfo}\\ResXSyncToolStateInfo.csv", sb.ToString());
         }
 
         private static void CreateNewResX(string directory, CultureInfo selectedCulture, string resxFile)
         {
-            using (FileStream fs = new FileStream($"{directory}\\{resxFile}.{selectedCulture.Name}.resx", FileMode.Create))
+            using (
+                FileStream fs = new FileStream($"{directory}\\{resxFile}.{selectedCulture.Name}.resx",
+                    FileMode.Create))
             {
                 using (ResXResourceWriter writer = new ResXResourceWriter(fs))
                 {
@@ -154,10 +205,12 @@ namespace FileMonger
             }
         }
 
-        private static void EditExistingResxFile(string directory, CultureInfo selectedCulture, string resxFile, List<ResXEntry> editedEntries, FileInfo file)
+        private static void EditExistingResxFile(string directory, CultureInfo selectedCulture, string resxFile,
+            List<ResXEntry> editedEntries, FileInfo file)
         {
             //Use XML doc to edit file since ResXResourceWriter is unable to edit existing entries 
-            XElement doc = XElement.Load($"{directory}\\{selectedCulture.Name}\\{resxFile}.{selectedCulture.Name}.resx");
+            XElement doc =
+                XElement.Load($"{directory}\\{selectedCulture.Name}\\{resxFile}.{selectedCulture.Name}.resx");
             //Get xml elements
             var xmlElements = doc.Elements();
             //itterate & update
@@ -196,7 +249,10 @@ namespace FileMonger
             //Disable readonly - precautionary measure
             ToggleFileReadOnly(file, false);
 
-            using (FileStream fs = new FileStream($"{directory}\\{selectedCulture.Name}\\{resxFile}.{selectedCulture.Name}.resx", FileMode.Open, FileAccess.ReadWrite))
+            using (
+                FileStream fs =
+                    new FileStream($"{directory}\\{selectedCulture.Name}\\{resxFile}.{selectedCulture.Name}.resx",
+                        FileMode.Open, FileAccess.ReadWrite))
             {
                 doc.Save(fs);
             }
@@ -209,7 +265,8 @@ namespace FileMonger
             if (value)
             {
                 // Make the file RO
-                File.SetAttributes(fileInfo.FullName, File.GetAttributes(fileInfo.FullName) | FileAttributes.ReadOnly);
+                File.SetAttributes(fileInfo.FullName,
+                    File.GetAttributes(fileInfo.FullName) | FileAttributes.ReadOnly);
             }
             else
             {
@@ -223,10 +280,10 @@ namespace FileMonger
         private static XElement CreateXMLNodeFromResXEntry(ResXEntry entry)
         {
             return new XElement("data",
-                        new XAttribute("name", entry.Key),
-                        new XAttribute(XNamespace.Xml + "space", "preserve"),
-                        new XElement("value", entry.LocalizedValue),
-                        new XElement("comment", entry.LocalizedComment));
+                new XAttribute("name", entry.Key),
+                new XAttribute(XNamespace.Xml + "space", "preserve"),
+                new XElement("value", entry.LocalizedValue),
+                new XElement("comment", entry.LocalizedComment));
         }
 
         private static IEnumerable<ResXEntry> ExtractResXEntries(ResXResourceReader source, FileInfo file)

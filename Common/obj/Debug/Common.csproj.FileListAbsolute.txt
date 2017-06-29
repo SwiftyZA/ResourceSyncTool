@@ -3,3 +3,7 @@ c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Common\bin
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Common\obj\Debug\Common.dll
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Common\obj\Debug\Common.pdb
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Common\bin\Debug\Common.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Common\bin\Debug\Common.pdb
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Common\obj\Debug\Common.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\Common\obj\Debug\Common.pdb

@@ -20,7 +20,9 @@ namespace ResourceSyncTool.Extenders
                 case State.MasterChanged:
                     return "Master File Changed";
                 case State.Faulted:
-                    return "Faulted";
+                    return "Mismatching Arguments";
+                case State.LocalizedChanged:
+                    return "Localized File Changed";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }

@@ -7,3 +7,11 @@ c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\GoogleAPIC
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\GoogleAPIClient\obj\Debug\GoogleAPIClient.dll
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\GoogleAPIClient\obj\Debug\GoogleAPIClient.pdb
 c:\users\nsmit\documents\visual studio 2015\Projects\ResourceSyncTool\GoogleAPIClient\obj\Debug\GoogleAPIClient.csprojResolveAssemblyReference.cache
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\bin\Debug\GoogleAPIClient.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\bin\Debug\GoogleAPIClient.pdb
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\bin\Debug\Newtonsoft.Json.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\bin\Debug\Newtonsoft.Json.xml
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\obj\Debug\GoogleAPIClient.dll
+C:\Users\nsmit\Documents\Visual Studio 2015\Projects\ResourceSyncTool\ResourceSyncTool\GoogleAPIClient\obj\Debug\GoogleAPIClient.pdb

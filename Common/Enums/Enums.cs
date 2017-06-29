@@ -8,5 +8,6 @@
         GoogleTranslated = 3,
         MasterChanged = 4,
         Faulted = 5,
+        LocalizedChanged = 6,
     }
 }
