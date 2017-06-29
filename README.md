@@ -1,6 +1,7 @@
 # ResourceSyncTool
 A .Net Resx Synchronizer / Translation Tool
-by Neil Smit
+<br />
+Developed by Neil Smit
 
 This tool provides an UI for users to manage an application's resx files.
 
