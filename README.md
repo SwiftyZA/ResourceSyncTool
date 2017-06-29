@@ -8,4 +8,4 @@ Features:
 <br/>-Translating blank / new entries using google translate
 <br/>-Comparing previous master resx files with current files to find updated entries
 
-![image](https://user-images.githubusercontent.com/8044300/27331781-300d9cd2-55bf-11e7-9d80-cd0a570776b7.png)
+![image](https://user-images.githubusercontent.com/8044300/27687840-b2a48a6e-5cd8-11e7-9ada-668ace68bb18.png)
